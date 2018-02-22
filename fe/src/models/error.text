@@ -1,0 +1,22 @@
+
+/booth/v1/list
+{"curPage":1,"numPerPage":20}
+
+POST /booth/v1/list HTTP/1.1
+Host: localhost:8989
+Connection: keep-alive
+Content-Length: 29
+Pragma: no-cache
+Cache-Control: no-cache
+Origin: http://localhost:8989
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36
+Content-Type: application/json;charset=UTF-8
+Accept: application/json, text/javascript, */*; q=0.01
+Access-Control-Allow-Credentials: true
+X-Requested-With: XMLHttpRequest
+token: 3a90beddb879790a606bcb1141e325d9
+DNT: 1
+Referer: http://localhost:8989/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6
+Cookie: _sid=67828f43e6*841e1bb4789c0acc993b5; sid=67828f43e6*841e1bb4789c0acc993b5; hssoid=67828f43e6*841e1bb4789c0acc993b5; ssoid=67828f43e6*841e1bb4789c0acc993b5; ___rl__test__cookies=1493806040429; qrcodeStatus=fail; __mta=211008426.1493797324318.1493809466552.1493809485001.84; userid=2039622; token=18801120480:e7c77bdd9fb62ced783255e1b909139db74fae4d

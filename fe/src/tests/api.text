@@ -1,0 +1,311 @@
+
+
+
+
+
+一、订单管理-充值卡
+注意：订单管理里加入一个“充值卡”左侧导航；充值卡里有2个子导航：一个“充值卡信息管理”，一个“充值卡销售管理”
+
+A、“充值卡信息管理”里需要有展示充值卡列表、获取充值卡详细信息、修改充值卡信息、新增充值卡 四大功能；对应的四个接口如下
+
+（1）获取充值卡信息列表接口：
+->接口地址：/rechargeCard/v1/list
+->POST请求参数：{"curPage":1, "numPerPage":20}
+->请求返回数据：
+{
+    "msg": "成功",
+    "data": {
+        "totalPageNum": 1,
+        "curPage": 1,
+        "rechargeCardList": [
+            {
+                "salesLimit": 200,                    //总销售限制
+                "actualCredit": "1030.00",      //赠送值
+                "price": "1000.00",                  //销售价
+                "actualSales": 0,                      //当前销售量
+                "enable": 1,                             //禁用状态
+                "id": 1,                                     //编号
+                "name": "1000充值卡"             //名称；防止在编号后面
+            }
+        ],
+        "numPerPage": 20
+    },
+    "err": 0
+}
+
+（2）获取充值卡详细信息接口：
+->接口地址：/rechargeCard/v1/info
+->POST请求参数：{"id": 1, "type":"baseInfo"}
+->请求返回数据：
+{
+    "msg": "成功",
+    "data": {
+        "baseInfo": {
+            "salesLimit": 200, //总销量限制
+            "actualCredit": "1030.00", //赠送值
+            "price": "1000.00", //销售价
+            "actualSales": 0,  //当前销量
+            "enable": 1,   //禁用状态
+            "images": [    //图片信息
+                {
+                    "url": "/image/28d1f544f5a81271be7293ee6ae12850.jpg",
+                    "imageId": 1,
+                    "priority": 1,
+                    "width": 320,
+                    "imageName": "28d1f544f5a81271be7293ee6ae12850.jpg",
+                    "height": 320,
+                    "thumbnail": "/image/28d1f544f5a81271be7293ee6ae12850_thumbnail.jpg",
+                    "size": 16
+                }
+            ],
+            "id": 1,                           //编号
+            "name": "1000充值卡"   //充值卡名称
+        }
+    },
+    "err": 0
+}
+
+（3）修改充值卡信息接口：
+->接口地址：/rechargeCard/v1/modify
+->POST请求参数：
+{
+    "id":1,                   //编号
+    "type":"baseInfo",        //类型，只能为baseInfo
+    "name": "1000充值卡",      //充值卡名称
+    "enable": 1,              //禁用状态
+    "price": "1000.00",       //销售价
+    "actualCredit": "1030.00", //赠送值
+    "salesLimit": 200, //总销售限制
+    "images": [1]      //图片信息
+}
+->请求返回数据：
+{
+    "msg": "修改成功",
+    "data": {},
+    "err": 0
+}
+
+（4）新增充值卡接口：
+注意：新增之后根据rechargeCardId跳转到修改界面
+->接口地址：/rechargeCard/v1/add
+->POST请求参数：
+{
+  "name" : "1000充值卡", //充值卡名称
+}
+->请求返回数据：
+{
+    "msg": "成功",
+    "data": {
+        "rechargeCardId": 3
+    },
+    "err": 0
+}
+
+B、“充值卡销售管理”里面就一个列表，记录所有的充值卡销售信息;仅一个列表功能
+（1）充值卡销售列表
+->接口地址：/rechargeCard/v1/salesList
+->POST请求参数：
+{
+    "curPage": 1,
+    "numPerPage": 20,
+    "id": 1,                          //编号条件过滤；可以没有
+    "orderId": "rc0000000000000001",  //订单号条件过滤；可以没有
+    "userPhone": "15117987866",       //用户手机号条件过滤；可以没有
+    "buyTime": {                      //购买时间过滤；可以没有
+        "min": "2017-05-01 00:00:00",
+        "max": "2017-07-01 00:00:00"
+    }
+}
+->请求返回数据：
+{
+    "msg": "成功",
+    "data": {
+        "salesList": [
+            {
+                "orderId": "rc0000000000000001",   //订单号
+                "actualCredit": "1030.00",                 //赠送值
+                "buyName": "王者归来火锅",             //买家名称
+                "totalMoney": "2000.00",                 //销售总价
+                "price": "1000.00",                            //销售价
+                "paymentMode": "微信支付",           //支付方式
+                "number": 2,                                    //数量
+                "userPhone": "15117987866",         //买家手机号
+                "buyTime": "2017-06-08 11:18:35", //购买时间
+                "id": 1                                              //编号
+            }
+        ],
+        "curPage": 1,
+        "numPerPage": 20,
+        "totalPageNum": 1
+    },
+    "err": 0
+}
+
+二、用户详情变更
+注意：用户详情中增加2个tab页：充值卡购买记录、充值卡消费记录
+->请求接口：/user/v1/info
+
+A、充值卡购买记录
+->充值卡购买记录请求参数：
+{"phone":"15117987866", "type":"rechargeCardInfo", "curPage":1, "numPerPage":20, "buyTime":{"min":"2017-01-01 00:00:00", "max":"2017-06-01 00:00:00"}}
+其中：buyTime是可选参数操作；过滤购买时间
+->返回结果：
+{
+    "msg": "成功",
+    "data": {
+        "salesList": [
+            {
+                "orderId": "rc0000000000000001", //订单号
+                "actualCredit": "1030.00",               //赠送值
+                "totalMoney": "2000.00",                //销售总价
+                "price": "1000.00",                           //销售价
+                "paymentMode": "微信支付",          //支付方式
+                "number": 2,                                    //数量
+                "buyTime": "2017-06-08 11:18:35", //购买时间
+                "id": 1      //编号
+            }
+        ],
+        "curPage": 1,
+        "numPerPage": 20,
+        "totalPageNum": 1
+    },
+    "err": 0
+}
+
+
+B、充值卡消费记录
+->充值卡消费记录请求参数：
+{"phone":"15117987866", "type":"rechargeCardUsed", "curPage":1, "numPerPage":20, "usedTime":{"min":"2017-01-01 00:00:00", "max":"2017-05-01 00:00:00"}}
+其中：usedTime是可选参数；过滤消费时间
+->返回结果：
+{
+    "msg": "成功",
+    "data": {
+        "totalPageNum": 1,
+        "usedList": [
+            {
+                "totalMoney": "380.00",                    //消费金额
+                "id": 127981,                                      //订单号
+                "paymentTime": "2017-05-07 17:06:43" //消费时间
+            }
+        ],
+        "curPage": 1,
+        "numPerPage": 20
+    },
+    "err": 0
+}
+
+注意：订单号可以跳转到订单详情界面
+
+
+
+
+
+
+分类的修改接口：
+data = {
+    "id":1,
+    "type":"baseInfo",
+    "searchKey": "关键字1",
+    "enable": 1,
+    "layout": 20001,
+    "name": "蔬菜_花菜",
+    "priority": 9,
+    "simpleDescription": "商家分类简单描述2",
+    "detailDescription": "商家分类详细描述2",
+}
+#data = {"id":1, "type":"boothInfo", "boothId":5}
+#data = {"id":1, "type":"picInfo", "images":[7,8]}
+json_data = json.dumps(data)
+create_url="http://127.0.0.1/category/v1/modify"
+
+
+
+
+
+
+注意：
+->请求接口的时候，header中需要带：
+{"Content-Type":"application/json;charset=utf-8", "token": "3a90beddb879790a606bcb1141e325d9"}
+->请求都是POST请求
+
+一、商家相关接口
+1、商家列表接口
+->商家列表信息接口（其中searchKey\id\name\businessScope\enable\categoryNum\productNum\priority为筛选条件）：data = {"curPage":1, "numPerPage":20, "searchKey": "关键", "id":1, "name":"长春", "businessScope":1, "enable":1, "categoryNum":{"min":0, "max":10}, "productNum":{"min":0, "max":10}, "priority":{"min":0, "max":10000}}
+
+url="http://59.110.25.240/booth/v1/list"
+
+2、商家详细信息接口
+->商家基本信息页面：data = {"id": 1, "type":"baseInfo"}
+->商家地址信息页面：data = {"id": 1, "type":"addressInfo"}
+->商家分类信息页面（其中condition中的元素为筛选条件）：data = {"id": 1, "type":"categoryInfo", "condition":{"categoryId":1, "categoryName":"蔬菜"}, "curPage":1, "numPerPage":20}
+->商家商品信息页面（其中condition中的元素为筛选条件）：data = {"id": 1, "type":"productInfo", "condition":{"stockAlarm":0, "productId":2, "productName":"香菜", "categoryName":"蔬菜"}, "curPage":1, "numPerPage":20}
+->商家图片信息页面：data = {"id": 1, "type":"picInfo"}
+
+->商家H5信息页面：data = {"id": 1, "type":"h5Info"}
+
+url="http://59.110.25.240/booth/v1/info"
+
+二、分类相关接口
+1、分类列表接口
+->商家分类列表页面（其中searchKey\id\name\enable\productNum\priority\boothName为筛选条件）：data = {"curPage":1, "numPerPage":20, "searchKey": "关键", "id":2, "name":"蔬菜", "enable":1, "productNum":{"min":0, "max":10}, "priority":{"min":0, "max":10000}, "type":0, "boothName":"长春"}
+->一般分类列表页面（其中searchKey\id\name\enable\productNum\priority为筛选条件）data = {"curPage":1, "numPerPage":20, "searchKey": "关键", "id":5, "name":"促销", "enable":1, "productNum":{"min":0, "max":10}, "priority":{"min":0, "max":10000}, "type":1}
+
+url="http://59.110.25.240/category/v1/list"
+
+2、分类详细信息接口
+->分类基本信息页面：data = {"id": 1, "type":"baseInfo"}
+->分类关联商家页面（condition为筛选条件，里面的元素）：data = {"id": 1, "type":"boothInfo", "condition":{"boothId":1, "boothName":"海"}, "curPage":1, "numPerPage":20}
+->分类管理商品页面（condition为筛选条件，里面的元素）：data = {"id": 2, "type":"productInfo", "condition":{"stockAlarm":0, "productId":2, "productName":"香菜", "categoryName":"蔬菜"}, "curPage":1, "numPerPage":20}
+->分类图片页面：data = {"id": 1, "type":"picInfo"}
+
+url="http://59.110.25.240/category/v1/info"
+
+三、商品相关接口
+1、商品列表接口
+->获取商品列表参数（其中searchKey\id\name\enable\priority\boothName为筛选条件）：data = {"curPage":1, "numPerPage":2, "searchKey": "关键", "id":2, "name":"香菜", "enable":1, "priority":{"min":0, "max":10000}, "boothName":"长春"}
+
+url="http://59.110.25.240/product/v1/list"
+
+2、商品信息接口
+
+(POST参数，以下每个data都是支持的一个页所需要的请求数据)
+->商品基本信息页面：data = {"id": 1, "type":"baseInfo"}
+->商品零拣信息页面：data = {"id": 1, "type":"retailInfo"}
+->商品整件信息页面：data = {"id": 1, "type":"wholesaleInfo"}
+->商品商家分类信息页面：（condition中的条件可以有，也可以没有）：data = {"id": 1, "type":"boothCategoryInfo", "condition":{"categoryId":2, "categoryName":"蔬菜", "boothName":"长春"}, "curPage":1, "numPerPage":20}
+->商品一般分类信息页面：（condition中的条件可以有，也可以没有）：data = {"id": 5, "type":"commonCategoryInfo", "condition":{"categoryId":5, "categoryName":"促销"}, "curPage":1, "numPerPage":20}
+->商品图片信息页面：data = {"id": 1, "type":"picInfo"}
+->商品质检报告页面：data = {"id": 1, "type":"qualityReportPicInfo"}
+->商品H5页面：data = {"id": 1, "type":"h5Info"}
+
+url="http://59.110.25.240/product/v1/info"
+
+四、公pr共接口
+1、业务区域列表：（没有参数）
+url="http://59.110.25.240/common/v1/businessArea/list"
+
+2、业务范围列表：（没有参数）
+url="http://59.110.25.240/common/v1/businessScope/list"
+
+3、配送线路列表：（没有参数）
+url="http://59.110.25.240/common/v1/deliveryLine/list"
+
+4、配送中心列表：（没有参数）
+url="http://59.110.25.240/common/v1/distributionCenter/list"
+
+5、商品品类列表：（没有参数）
+url="http://59.110.25.240/common/v1/productClassification/list"
+
+五''
+/common/v1/adminBusinessScope/list
+/common/v1/adminBusinessArea/list
+/common/v1/adminDistributionCenter/list
+/common/v1/adminDeliveryLine/list
+
+归属品类
+对应的value是1
+
+/common/v1/adminProductClassification/list
+/common/v1/adminImage/upload
+
